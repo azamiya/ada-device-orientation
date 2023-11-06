@@ -5,10 +5,10 @@ mqttClient.on('connect', () => {
 });
 
 let degrees;
-console.log(degrees)
-if(degrees) {
-  mqttClient.publish("degrees", degrees)
-}
+// console.log(degrees)
+// if(degrees) {
+//   mqttClient.publish("degrees", degrees)
+// }
 
 // OS識別用
 let os;
@@ -56,6 +56,8 @@ function orientation(event) {
     // deviceorientationabsoluteイベントのalphaを補正
     degrees = compassHeading(alpha, beta, gamma);
   }
+
+  console.log(degrees);
 
   let direction;
   if (
