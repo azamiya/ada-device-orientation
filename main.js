@@ -2,13 +2,10 @@ const mqttClient = mqtt.connect('wss://mqtt.devwarp.work');
 
 mqttClient.on('connect', () => {
   console.log('connected');
+  mqttClient.publish("test", "hoge")
 });
 
 let degrees;
-// console.log(degrees)
-// if(degrees) {
-//   mqttClient.publish("degrees", degrees)
-// }
 
 // OS識別用
 let os;
