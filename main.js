@@ -56,6 +56,7 @@ function orientation(event) {
     // deviceorientationabsoluteイベントのalphaを補正
     degrees = compassHeading(alpha, beta, gamma);
   }
+  console.log("hoge");
 
   console.log(degrees);
 
