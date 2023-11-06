@@ -11,6 +11,10 @@
     <script type="text/javascript">
       const mqttClient = mqtt.connect('wss://mqtt.devwarp.work');
 
+      mqttClient.on('connect', () => {
+        console.log('connected');
+      });
+
       // OS識別用
       let os;
 
@@ -59,9 +63,9 @@
           degrees = compassHeading(alpha, beta, gamma);
         }
 
-        if(degrees) {
-          mqttClient.publish("degrees", degrees)
-        }
+        // if(degrees) {
+        //   mqttClient.publish("degrees", degrees)
+        // }
 
         let direction;
         if (
@@ -162,6 +166,7 @@
   </head>
 
   <body>
+    <h1>v0.9.3</h1>
     <ul>
       <input type="button" id="permit" value="SafariでDeviceOrientationを許可"/>
       <li>【方角】<span id="direction"></span></li>
