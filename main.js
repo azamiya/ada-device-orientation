@@ -1,5 +1,14 @@
 const mqttClient = mqtt.connect('wss://mqtt.devwarp.work');
 
+mqttClient.on('connect', () => {
+  console.log('connected');
+});
+
+let degrees;
+if(degrees) {
+  mqttClient.publish("degrees", degrees)
+}
+
 // OS識別用
 let os;
 
@@ -15,20 +24,21 @@ function init() {
     document.querySelector("#permit").addEventListener("click", permitDeviceOrientationForSafari);
 
     window.addEventListener(
-      "deviceorientation",
-      orientation,
-      true
+        "deviceorientation",
+        orientation,
+        true
     );
   } else if (os == "android") {
     window.addEventListener(
-      "deviceorientationabsolute",
-      orientation,
-      true
+        "deviceorientationabsolute",
+        orientation,
+        true
     );
   } else{
     window.alert("PC未対応サンプル");
   }
 }
+
 
 // ジャイロスコープと地磁気をセンサーから取得
 function orientation(event) {
@@ -37,17 +47,13 @@ function orientation(event) {
   let beta = event.beta;
   let gamma = event.gamma;
 
-  let degrees;
-  if (os == "iphone") {
+  if(os == "iphone") {
     // webkitCompasssHeading値を採用
     degrees = event.webkitCompassHeading;
-  } else {
+
+  }else{
     // deviceorientationabsoluteイベントのalphaを補正
     degrees = compassHeading(alpha, beta, gamma);
-  }
-
-  if(degrees) {
-    mqttClient.publish("degrees", degrees)
   }
 
   let direction;
@@ -55,21 +61,21 @@ function orientation(event) {
     (degrees > 337.5 && degrees < 360) ||
     (degrees > 0 && degrees < 22.5)
   ) {
-      direction = "北";
+    direction = "北";
   } else if (degrees > 22.5 && degrees < 67.5) {
-      direction = "北東";
+    direction = "北東";
   } else if (degrees > 67.5 && degrees < 112.5) {
-      direction = "東";
+    direction = "東";
   } else if (degrees > 112.5 && degrees < 157.5) {
-      direction = "東南";
+    direction = "東南";
   } else if (degrees > 157.5 && degrees < 202.5) {
-      direction = "南";
+    direction = "南";
   } else if (degrees > 202.5 && degrees < 247.5) {
-      direction = "南西";
+    direction = "南西";
   } else if (degrees > 247.5 && degrees < 292.5) {
-      direction = "西";
+    direction = "西";
   } else if (degrees > 292.5 && degrees < 337.5) {
-      direction = "北西";
+    direction = "北西";
   }
 
   document.querySelector("#direction").innerHTML =
@@ -105,9 +111,9 @@ function compassHeading(alpha, beta, gamma) {
 
   // Convert compass heading to use whole unit circle
   if (Vy < 0) {
-    compassHeading += Math.PI;
+      compassHeading += Math.PI;
   } else if (Vx < 0) {
-    compassHeading += 2 * Math.PI;
+      compassHeading += 2 * Math.PI;
   }
 
   return compassHeading * (180 / Math.PI); // Compass Heading (in degrees)
@@ -134,14 +140,14 @@ function detectOSSimply() {
 
 // iPhone + Safariの場合はDeviceOrientation APIの使用許可をユーザに求める
 function permitDeviceOrientationForSafari() {
-DeviceOrientationEvent.requestPermission()
-  .then(response => {
-  if (response === "granted") {
-    window.addEventListener(
-    "deviceorientation",
-    detectDirection
-    );
-  }
-  })
-  .catch(console.error);
+  DeviceOrientationEvent.requestPermission()
+    .then(response => {
+      if (response === "granted") {
+        window.addEventListener(
+          "deviceorientation",
+          detectDirection
+        );
+      }
+    })
+    .catch(console.error);
 }
