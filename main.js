@@ -5,6 +5,7 @@ mqttClient.on('connect', () => {
 });
 
 let degrees;
+console.log(degrees)
 if(degrees) {
   mqttClient.publish("degrees", degrees)
 }
